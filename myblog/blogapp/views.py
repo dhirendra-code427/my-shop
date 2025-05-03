@@ -1,7 +1,8 @@
 from django.shortcuts import render ,redirect
-from.models import Adminlogin 
+from.models import Adminlogin ,Enquiry
 from django.core.exceptions import ObjectDoesNotExist
-# Create your views here.
+from django.utils import timezone
+import datetime
 def index(req):
     return  render(req,"index.html")
 
@@ -24,7 +25,17 @@ def signup(req):
     return render(req,"signup.html")
 
 def contact(req):
-    return render(req,'contact.html')
+    if req.method=="POST":
+        name=req.POST['name']
+        address=req.POST['address']
+        emailaddress=req.POST['emailaddress']
+        enquirytext=req.POST['enquirytext']
+        enquirydate=datetime.datetime.today()
+        enq=Enquiry(name=name,address=address,emailaddress=emailaddress,enquirytext=enquirytext,enquirydate=enquirydate)
+        enq.save()
+        msg="Your enquiry is submitted successfully"
+        return render(req,"contact.html",{'msg':msg})   
+    return render(req,"contact.html")
 
 
 
